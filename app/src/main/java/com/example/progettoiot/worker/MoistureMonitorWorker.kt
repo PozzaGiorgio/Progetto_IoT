@@ -22,20 +22,21 @@ class MoistureMonitorWorker(
     override suspend fun doWork(): ListenableWorker.Result {
         return try {
             val result = repository.getMoistureStatus()
-            when (result) {
-                is Result.Success -> {
+
+            return when {
+                result is com.example.progettoiot.repository.Result.Success -> {
                     if (result.data.stato == "secco") {
                         sendDryNotification()
                     }
                     ListenableWorker.Result.success()
                 }
-                is Result.Error -> {
-                    // Log dell'errore ma non fallire il worker
+                result is com.example.progettoiot.repository.Result.Error -> {
                     ListenableWorker.Result.success()
                 }
-                is Result.Loading -> {
+                result is com.example.progettoiot.repository.Result.Loading -> {
                     ListenableWorker.Result.success()
                 }
+                else -> ListenableWorker.Result.failure()
             }
         } catch (e: Exception) {
             ListenableWorker.Result.failure()

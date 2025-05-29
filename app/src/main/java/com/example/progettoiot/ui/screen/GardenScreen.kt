@@ -80,8 +80,8 @@ fun GardenScreen(
                         )
                     }
 
-                    uiState.moistureData != null -> {
-                        val isWet = uiState.moistureData.stato == "umido"
+                    uiState.moistureData?.let { moistureData ->
+                        val isWet = moistureData.stato == "umido"
 
                         // Icona stato
                         Box(
@@ -130,7 +130,8 @@ fun GardenScreen(
                         }
                     }
 
-                    uiState.errorMessage != null -> {
+                            uiState.errorMessage != null -> {
+                    uiState.errorMessage?.let { errorMsg ->
                         Icon(
                             imageVector = Icons.Default.Error,
                             contentDescription = null,
@@ -145,12 +146,13 @@ fun GardenScreen(
                             modifier = Modifier.padding(top = 16.dp)
                         )
                         Text(
-                            text = uiState.errorMessage,
+                            text = errorMsg,
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
+                }
                 }
             }
         }
