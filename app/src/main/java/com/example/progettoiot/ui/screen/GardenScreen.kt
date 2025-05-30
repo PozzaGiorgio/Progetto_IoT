@@ -46,7 +46,7 @@ fun GardenScreen(
     ) {
         // Header
         Text(
-            text = "🌱 Garden Monitor",
+            text = "🌾 Demetra",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White,
@@ -264,7 +264,7 @@ fun GardenScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "🏡 Sistema IoT Giardino",
+                    text = "🌾 Demetra - Sistema IoT",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF2E7D32)
