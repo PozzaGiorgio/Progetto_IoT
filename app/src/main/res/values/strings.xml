@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">Progetto Iot</string>
+    <string name="app_name">Demetra</string>
+    <string name="soil_moisture">Umidità del terreno</string>
+    <string name="pump_status">Stato pompa</string>
+    <string name="activate_pump">Attiva Pompa</string>
+    <string name="refresh_status">Aggiorna Stato</string>
+    <string name="soil_wet">Terreno Umido</string>
+    <string name="soil_dry">Terreno Secco</string>
+    <string name="connection_error">Errore di connessione</string>
+    <string name="pump_activated">Pompa attivata con successo!</string>
+    <string name="notification_title">Terreno Secco!</string>
+    <string name="notification_content">Le tue piante hanno bisogno di acqua. Tocca per aprire l\'app.</string>
 </resources>

@@ -36,8 +36,8 @@ fun GardenScreen(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF81C784), // Verde chiaro
-                        Color(0xFF4CAF50)  // Verde
+                        Color(0xFF81C784),
+                        Color(0xFF4CAF50)
                     )
                 )
             )
@@ -67,92 +67,76 @@ fun GardenScreen(
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                when {
-                    uiState.isLoading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(60.dp),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = "Caricamento...",
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                    }
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(60.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "Caricamento...",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                } else if (uiState.moistureData != null) {
+                    val moistureData = uiState.moistureData
+                    val isWet = moistureData?.stato == "umido"
 
-                    uiState.moistureData?.let { moistureData ->
-                        val isWet = moistureData.stato == "umido"
-
-                        // Icona stato
-                        Box(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    if (isWet) Color(0xFF4CAF50) else Color(0xFFFF9800)
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = if (isWet) Icons.Default.WaterDrop else Icons.Default.Warning,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(40.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = if (isWet) "Terreno Umido" else "Terreno Secco",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isWet) Color(0xFF2E7D32) else Color(0xFFE65100)
-                        )
-
-                        Text(
-                            text = if (isWet) "Le piante stanno bene! 🌿" else "Le piante hanno bisogno di acqua! 🚨",
-                            style = MaterialTheme.typography.bodyLarge,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-
-                        // Ultimo aggiornamento
-                        if (uiState.lastUpdateTime > 0) {
-                            Text(
-                                text = "Ultimo aggiornamento: ${
-                                    SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-                                        .format(Date(uiState.lastUpdateTime))
-                                }",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.Gray
-                            )
-                        }
-                    }
-
-                            uiState.errorMessage != null -> {
-                    uiState.errorMessage?.let { errorMsg ->
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (isWet == true) Color(0xFF4CAF50) else Color(0xFFFF9800)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
                         Icon(
-                            imageVector = Icons.Default.Error,
+                            imageVector = if (isWet == true) Icons.Default.WaterDrop else Icons.Default.Warning,
                             contentDescription = null,
-                            tint = Color(0xFFD32F2F),
-                            modifier = Modifier.size(60.dp)
-                        )
-                        Text(
-                            text = "Errore di connessione",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFFD32F2F),
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                        Text(
-                            text = errorMsg,
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(vertical = 8.dp)
+                            tint = Color.White,
+                            modifier = Modifier.size(40.dp)
                         )
                     }
-                }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = if (isWet == true) "Terreno Umido" else "Terreno Secco",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isWet == true) Color(0xFF2E7D32) else Color(0xFFE65100)
+                    )
+
+                    Text(
+                        text = if (isWet == true) "Le piante stanno bene! 🌿" else "Le piante hanno bisogno di acqua! 🚨",
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+
+                    if (uiState.lastUpdateTime > 0) {
+                        Text(
+                            text = "Ultimo aggiornamento: ${
+                                SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+                                    .format(Date(uiState.lastUpdateTime))
+                            }",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray
+                        )
+                    }
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.CloudOff,
+                        contentDescription = null,
+                        tint = Color.Gray,
+                        modifier = Modifier.size(60.dp)
+                    )
+                    Text(
+                        text = "In attesa di dati...",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
                 }
             }
         }
@@ -291,16 +275,6 @@ fun GardenScreen(
                     color = Color.Gray
                 )
             }
-        }
-    }
-
-    // Gestione errori con Snackbar
-    LaunchedEffect(uiState.errorMessage) {
-        if (uiState.errorMessage != null) {
-            // Qui potresti mostrare un Snackbar se necessario
-            // Per ora cancelliamo l'errore dopo 5 secondi
-            kotlinx.coroutines.delay(5000)
-            viewModel.clearError()
         }
     }
 }
